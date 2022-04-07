@@ -1,0 +1,93 @@
+#include <cs50.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+
+int main(int argc, string argv[])
+{
+    string input;
+     //sets a to the value given in compand line as an int
+    int key = atoi(argv[1]);
+
+    // check that the cmd line key given is valid as a number, positive and only one argument
+        if ((argc != 2) || (isalpha(argv[1])))
+        {
+           //promput user to use the programme correctly
+            printf("Usage: ./caesar key\n");
+            return 1;
+        }
+        else
+        {
+            //else, obtain user text input if the command line input is valid
+            do
+            {
+                input = get_string("plain text:  ");
+            }
+            while(strlen(input) < 1);
+        }
+
+        //Make modkey, required so that large keys apply to range of the alphabet. Creates a loop without a loop.
+        int modkey = 0;
+        if(key >= 26)
+        {
+            modkey = key % 26;
+        }
+        else
+        {
+            modkey = key;
+        }
+
+
+        printf("ciphertext: ");
+    //checking the char of input string and assigning action according to cipher key
+    char c;
+    char result;
+    for (int i = 0, len = strlen(input); i < len; i++)
+    {
+    if(isalpha(input[i]) && isupper(input[i]))
+        {
+            //If the key goes past 'Z', then loop back to start and add key
+            c = input[i] + modkey;
+            if(c > 'Z')
+            {
+                result = c - 'Z' + '@';
+            }
+            //If key added to lower case letter is within range already, no chnage
+            else
+            {
+                result = c;
+            }
+        }
+        //checks if lower case letter
+        else if(isalpha(input[i]) && islower(input[i]))
+        {
+            //If the key goes past 'z', then cast to UPPER loop back to start and add key, then cast back to lower: fixes overspill issue
+            c = toupper(input[i]) + modkey;
+            if(c > 'Z')
+            {
+                result = c - 'Z' + '@';
+                result = tolower(result);
+            }
+            //If key added to lower case letter is within range already, cast back to lower
+            else
+            {
+                result = tolower(c);
+            }
+        }
+        //Handles the char that are non-alpha unchanged
+        else
+        {
+            result = input[i];
+        }
+        printf("%c", result);
+    }
+    //print a new line after loop is complete
+    printf("\n");
+    // return code for end programme
+    return 0;
+    //end of programme
+}
+
+
